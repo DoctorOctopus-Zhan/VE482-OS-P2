@@ -13,7 +13,7 @@ int execute(int argc, char** argv) {
         switch (pid = fork())
         {
         case -1:
-            /* code */
+            // exit(-1);
             break;
 
         case 0: {
@@ -25,10 +25,9 @@ int execute(int argc, char** argv) {
 
         default: {
             int status;
+            
             waitpid(pid, &status, 0);
-            if (WEXITSTATUS(status)) {
-                printf("Error: %s\n", strerror(WEXITSTATUS(status)));
-            }
+
         }
         }
     }
