@@ -7,14 +7,15 @@ int main() {
     int status;
     int argc = 0; // numbers of command arguments
     char** argv = NULL;
+
     do {
-        
 
         printf("mumsh $ ");
         fflush(stdout);
         
         line = readInput();
         argv = parse(line);
+        argc = sizeof(argv)/sizeof(char*);
         status = execute(argc, argv);
         free(argv);
         free(line);
