@@ -72,24 +72,29 @@ void redirect_fd(redirect_t* rt) {
     case 1:
         {
             redirect_in(rt->in_file);
+            break;
         }
     case 2:
         {
             redirect_out(rt->out_file);
+            break;
         }
     case 3:
         {
             redirect_in(rt->in_file);
             redirect_out(rt->out_file);
+            break;
         }
     case 4:
         {
             redirect_outAdd(rt->out_file);
+            break;
         }
     case 5:
         {
             redirect_in(rt->in_file);
             redirect_outAdd(rt->out_file);
+            break;
         }
     default:
         // error handling
