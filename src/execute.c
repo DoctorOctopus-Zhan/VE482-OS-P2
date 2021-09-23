@@ -34,7 +34,7 @@ int execute(int argc, char** argv) {
     char** argv_new = malloc(MAX_LENGTH * sizeof(char*));
     for (int i = 0; i < argc; ++i) {
         if (isreInput(argv[i]) || isreOutput(argv[i]) || isreOutputAdd(argv[i])) {
-            i += 1;
+            ++i;
         }
         else {
             argv_new[argc_new++] = argv[i];
