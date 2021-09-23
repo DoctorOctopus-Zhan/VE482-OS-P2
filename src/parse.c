@@ -11,6 +11,6 @@ char** parse(char* line) {
     }
 
     argv[index] = NULL;
-    
+    argc = index;
     return argv;
 }

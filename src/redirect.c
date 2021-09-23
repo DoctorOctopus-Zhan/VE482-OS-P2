@@ -4,13 +4,13 @@ bool isreOutputAdd(char* str) {
     if (strcmp(str, ">>") == 0) {
         return true;
     }
-    int n = (int)strlen(str);
-    int left = 0, right = 1;
-    while (right < n) {
-        if (str[left++] == '>' && str[right++] == '>' && str[0] != '\'' && str[0] != '\"') {
-            return true;
-        }
-    }
+    // int n = (int)strlen(str);
+    // int left = 0, right = 1;
+    // while (right < n) {
+    //     if (str[left++] == '>' && str[right++] == '>' && str[0] != '\'' && str[0] != '\"') {
+    //         return true;
+    //     }
+    // }
     return false;
 }
 
@@ -18,26 +18,81 @@ bool isreOutput(char* str) {
     if (strcmp(str, ">") == 0) {
         return true;
     }
-    int n = (int)strlen(str);
-    int left = 0;
-    while (left < n) {
-        if (str[left++] == '>' && str[0] != '\'' && str[0] != '\"') {
-            return true;
-        }
-    }
-    return true;
+    // int n = (int)strlen(str);
+    // int left = 0;
+    // while (left < n) {
+    //     if (str[left++] == '>' && str[0] != '\'' && str[0] != '\"') {
+    //         return true;
+    //     }
+    // }
+    return false;
 }
 
 bool isreInput(char* str) {
     if (strcmp(str, "<") == 0) {
         return true;
     }
-    int n = (int)strlen(str);
-    int left = 0;
-    while (left < n) {
-        if (str[left++] == '<' && str[0] != '\'' && str[0] != '\"') {
-            return true;
+    // int n = (int)strlen(str);
+    // int left = 0;
+    // while (left < n) {
+    //     if (str[left++] == '<' && str[0] != '\'' && str[0] != '\"') {
+    //         return true;
+    //     }
+    // }
+    return false;
+}
+
+void redirect_in(char* in_file) {
+    int in_fd = open(in_file, O_RDONLY, 0666);
+    dup2(in_fd, 0);
+    close(in_fd);
+    return;
+}
+
+void redirect_out(char* out_file) {
+    int out_fd = open(out_file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+    dup2(out_fd, 1);
+    close(out_fd);
+    return;
+}
+
+void redirect_outAdd(char* out_file) {
+    int out_fd = open(out_file, O_WRONLY | O_CREAT | O_APPEND, 0666);
+    dup2(out_fd, 1);
+    close(out_fd);
+    return;
+}
+
+void redirect_fd(redirect_t* rt) {
+    switch (rt->io)
+    {
+    case 0:
+        /* code */
+        break;
+    case 1:
+        {
+            redirect_in(rt->in_file);
         }
+    case 2:
+        {
+            redirect_out(rt->out_file);
+        }
+    case 3:
+        {
+            redirect_in(rt->in_file);
+            redirect_out(rt->out_file);
+        }
+    case 4:
+        {
+            redirect_outAdd(rt->out_file);
+        }
+    case 5:
+        {
+            redirect_in(rt->in_file);
+            redirect_outAdd(rt->out_file);
+        }
+    default:
+        // error handling
+        break;
     }
-    return true;
 }

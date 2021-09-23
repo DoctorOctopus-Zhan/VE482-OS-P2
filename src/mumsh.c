@@ -5,7 +5,7 @@
 int main() {
     char* line = NULL; // get a line of input
     int status;
-    int argc = 0; // numbers of command arguments
+    // int argc = 0; // numbers of command arguments
     char** argv = NULL;
 
     do {
@@ -14,9 +14,10 @@ int main() {
         fflush(stdout);
         
         line = readInput();
+        argc = 0;
         argv = parse(line);
-        argc = sizeof(argv)/sizeof(char*);
         status = execute(argc, argv);
+
         free(argv);
         free(line);
     } while (status);
