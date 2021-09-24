@@ -16,6 +16,8 @@
 
 int argc; // numbers of command arguments
 
+bool ctrlD; // ctrl D input
+
 typedef struct {
     int io; // 1 for input_rd, 2 for output_overwrite_rd, 4 for output_append_rd, 3 or 5
     // int out;

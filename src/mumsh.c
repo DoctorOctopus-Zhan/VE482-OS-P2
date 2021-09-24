@@ -13,8 +13,10 @@ int main() {
         printf("mumsh $ ");
         fflush(stdout);
         
+        ctrlD = false;
         line = readInput();
         argc = 0;
+        
         argv = parse(line);
         status = execute(argc, argv);
 
