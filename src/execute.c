@@ -43,6 +43,13 @@ int execute(int argc, char** argv) {
     }
     argv_new[argc_new] = NULL;
 
+    // check the numbers of pipe operation '|'
+    // int fd[2];
+    bool ispipe = pipeExe(argc_new, argv_new);
+    if (ispipe) {
+        free(argv_new);
+        return 1;
+    }
     if (strcmp(argv[0], "exit") == 0) {
         printf("exit\n");
         exit(0);

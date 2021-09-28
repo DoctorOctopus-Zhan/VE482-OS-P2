@@ -43,6 +43,7 @@ void redirect_fd(redirect_t* rt);
 
 // pipe
 
-int pipenum(int argc, char** argv);
+int pipeNum(int argc, char** argv);
+bool pipeExe(int argc, char** argv);
 
 #endif
