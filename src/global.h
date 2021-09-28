@@ -41,5 +41,8 @@ void redirect_outAdd(char* out_file);
 
 void redirect_fd(redirect_t* rt);
 
+// pipe
+
+int pipenum(int argc, char** argv);
 
 #endif
