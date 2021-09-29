@@ -15,8 +15,7 @@ int execute(int argc, char** argv) {
     for (int i = 0; i < argc; ++i) {
         if (isreOutputAdd(argv[i])) {
             rt.io |= 4;
-            rt.out_file = argv[i+1];
-            
+            rt.out_file = argv[i+1];           
         }
         if (isreOutput(argv[i])) {
             rt.io |= 2;
@@ -43,13 +42,13 @@ int execute(int argc, char** argv) {
     }
     argv_new[argc_new] = NULL;
 
-    // check the numbers of pipe operation '|'
     // int fd[2];
-    bool ispipe = pipeExe(argc_new, argv_new);
+    bool ispipe = pipeExe(argc, argv);
     if (ispipe) {
         free(argv_new);
         return 1;
     }
+
     if (strcmp(argv[0], "exit") == 0) {
         printf("exit\n");
         exit(0);
