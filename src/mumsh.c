@@ -8,6 +8,10 @@ int main() {
     // int argc = 0; // numbers of command arguments
     char** argv = NULL;
 
+    // char* prePath = malloc(MAX_LENGTH * sizeof(char));
+    // memset(prePath, '\0', MAX_LENGTH * sizeof(char));
+    char prePath[MAX_LENGTH] = {'\0'};
+
     do {
 
         printf("mumsh $ ");
@@ -23,5 +27,6 @@ int main() {
         free(argv);
         free(line);
     } while (status);
+    free(prePath);
     return 0;
 }

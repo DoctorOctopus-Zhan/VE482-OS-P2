@@ -18,6 +18,8 @@ int argc; // numbers of command arguments
 
 bool ctrlD; // ctrl D input
 
+char prePath[MAX_LENGTH]; // record the previous dir path
+
 typedef struct {
     int io; // 1 for input_rd, 2 for output_overwrite_rd, 4 for output_append_rd, 3 or 5
     // int out;
@@ -48,6 +50,7 @@ bool pipeExe(int argc, char** argv);
 
 // bulit-in command
 
-
+char* mypwd(void);
+int mycd(int argc, char** argv, char prePath[MAX_LENGTH]);
 
 #endif

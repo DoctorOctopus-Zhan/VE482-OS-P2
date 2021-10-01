@@ -78,6 +78,15 @@ bool pipeExe(int argc, char** argv) {
                 dup2(fd[1], 1);
                 
             }
+            // bulit-in pwd with pipe
+            if (strcmp(argv[0], "pwd") == 0) {
+                redirect_fd(&rt);
+                char* currPath = mypwd();
+                printf("%s\n", currPath);
+                free(currPath);
+                exit(1);
+            }
+
             execvp(argv_new[0], argv_new);
             exit(1);
         }

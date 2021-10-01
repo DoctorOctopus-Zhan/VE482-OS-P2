@@ -45,11 +45,40 @@ int execute(int argc, char** argv) {
     }
     argv_new[argc_new] = NULL;
 
-    
 
-    if (strcmp(argv[0], "exit") == 0) {
+    if (strcmp(argv[0], "exit") == 0) { // bulit-in exit
         printf("exit\n");
         exit(0);
+    }
+    else if (strcmp(argv[0], "pwd") == 0) { // built-in pwd
+        pid = fork();
+        if (pid == 0) {
+            redirect_fd(&rt);
+            char* currPath = mypwd();
+            printf("%s\n", currPath);
+            free(currPath);
+            exit(1);
+        }
+        else {
+            int status;
+            waitpid(pid, &status, 0);
+        }
+    }
+    else if (strcmp(argv_new[0], "cd") == 0) { // built-in cd
+        if (argc_new > 2) {
+            printf("mumsh: cd: too many arguments\n");
+            free(argv_new);
+            return 1;
+        }
+        
+        int cd_success = mycd(argc_new, argv_new, prePath);
+        
+        if (cd_success == -1) {
+            printf("mumsh: cd: %s: No such file or directory\n", argv_new[1]);
+        }
+        else if (cd_success == 0) {
+
+        }
     }
     else {
         switch (pid = fork())
@@ -68,7 +97,6 @@ int execute(int argc, char** argv) {
 
         default: {
             int status;
-            
             waitpid(pid, &status, 0);
 
         }
