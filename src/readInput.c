@@ -29,6 +29,11 @@ char* readInput(void) {
             line_new[index++] = '<';
             line_new[index++] = ' ';
         }
+        else if (line[i] == '|') {
+            line_new[index++] = ' ';
+            line_new[index++] = '|';
+            line_new[index++] = ' ';
+        }
         else {
             line_new[index++] = line[i];
         }

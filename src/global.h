@@ -46,4 +46,8 @@ void redirect_fd(redirect_t* rt);
 int pipeNum(int argc, char** argv);
 bool pipeExe(int argc, char** argv);
 
+// bulit-in command
+
+
+
 #endif

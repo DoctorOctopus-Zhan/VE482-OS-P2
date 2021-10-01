@@ -3,10 +3,14 @@
 
 
 int execute(int argc, char** argv) {
-    int temp = argc;
-    temp = 0;
+    
     pid_t pid;
     if (argv[0] == NULL) return 1;
+
+    // check pipe
+    if (pipeExe(argc, argv)) {
+        return 1;
+    }
 
     redirect_t rt;
     rt.io = 0;
@@ -37,17 +41,11 @@ int execute(int argc, char** argv) {
         }
         else {
             argv_new[argc_new++] = argv[i];
-            // printf("%s\n", argv_new[argc_new-1]);
         }
     }
     argv_new[argc_new] = NULL;
 
-    // int fd[2];
-    bool ispipe = pipeExe(argc, argv);
-    if (ispipe) {
-        free(argv_new);
-        return 1;
-    }
+    
 
     if (strcmp(argv[0], "exit") == 0) {
         printf("exit\n");

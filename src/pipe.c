@@ -62,10 +62,12 @@ bool pipeExe(int argc, char** argv) {
         if (pid == 0) {
             // child process
             
+            // the first pipe, change the output only
             if (ith_pipe == 0) {
                 dup2(fd[1], 1);
                 redirect_fd(&rt);
             }
+            // the last pipe, change the input only
             else if (ith_pipe == num_pipe) {
                 dup2(in, 0);
                 redirect_fd(&rt);
