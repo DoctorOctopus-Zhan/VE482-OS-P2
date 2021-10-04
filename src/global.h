@@ -9,16 +9,21 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <sys/types.h>
-
+#include <signal.h>
+#include <setjmp.h>
 #include <fcntl.h>
 
 #define MAX_LENGTH 1024
 
 int argc; // numbers of command arguments
 
-bool ctrlD; // ctrl D input
+// bool ctrlD; // ctrl D input
 
 char prePath[MAX_LENGTH]; // record the previous dir path
+
+static sigjmp_buf env; // ctrl C
+
+static volatile sig_atomic_t jump_ctrlC;
 
 typedef struct {
     int io; // 1 for input_rd, 2 for output_overwrite_rd, 4 for output_append_rd, 3 or 5
@@ -52,5 +57,9 @@ bool pipeExe(int argc, char** argv);
 
 char* mypwd(void);
 int mycd(int argc, char** argv, char prePath[MAX_LENGTH]);
+
+// ctrl C
+
+void sigint_handler(int signo);
 
 #endif

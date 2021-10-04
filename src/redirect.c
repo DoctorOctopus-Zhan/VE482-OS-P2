@@ -67,7 +67,6 @@ void redirect_fd(redirect_t* rt) {
     switch (rt->io)
     {
     case 0:
-        /* code */
         break;
     case 1:
         {

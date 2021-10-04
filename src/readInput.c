@@ -1,10 +1,10 @@
 #include "global.h"
 
 char* readInput(void) {
-    char* line = malloc(MAX_LENGTH);
-    // ctrlD = false;
+    // char* line = malloc(MAX_LENGTH);
+    char line[MAX_LENGTH];
     if (fgets(line, MAX_LENGTH, stdin) == NULL) {
-        ctrlD = true;
+        // ctrlD = true;
         printf("exit\n");
         exit(0);
     }
@@ -38,7 +38,7 @@ char* readInput(void) {
             line_new[index++] = line[i];
         }
     }
-    free(line);
+    // free(line);
     // line[strlen(line)-1] = '\0';
     // return line;
     line_new[index] = '\0';

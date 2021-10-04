@@ -45,12 +45,19 @@ int execute(int argc, char** argv) {
     }
     argv_new[argc_new] = NULL;
 
+    // argc = argc_new;
+    // for (int i = 0; i < argc; ++i) {
+    //     argv[i] = argv_new[i];
+    // }
+    // argv[argc] = NULL;
+    // free(argv_new);
 
-    if (strcmp(argv[0], "exit") == 0) { // bulit-in exit
+
+    if (strcmp(argv_new[0], "exit") == 0) { // bulit-in exit
         printf("exit\n");
         exit(0);
     }
-    else if (strcmp(argv[0], "pwd") == 0) { // built-in pwd
+    else if (strcmp(argv_new[0], "pwd") == 0) { // built-in pwd
         pid = fork();
         if (pid == 0) {
             redirect_fd(&rt);
@@ -65,9 +72,9 @@ int execute(int argc, char** argv) {
         }
     }
     else if (strcmp(argv_new[0], "cd") == 0) { // built-in cd
-        if (argc_new > 2) {
+        if (argc > 2) {
             printf("mumsh: cd: too many arguments\n");
-            free(argv_new);
+            // free(argv_new);
             return 1;
         }
         
@@ -88,6 +95,7 @@ int execute(int argc, char** argv) {
             break;
 
         case 0: {
+            // signal(SIGINT, sigint_handler);
             redirect_fd(&rt);
             execvp(argv_new[0], argv_new);
             // execvp(argv[0], argv);
@@ -96,6 +104,8 @@ int execute(int argc, char** argv) {
 
 
         default: {
+            // free(argv);
+
             int status;
             waitpid(pid, &status, 0);
 
