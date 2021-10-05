@@ -14,7 +14,7 @@ int pipeNum(int argc, char **argv)
     int num = 0;
     for (int i = 0; i < argc; ++i)
     {
-        if (strcmp(argv[i], "|") == 0)
+        if (ispipe(argv[i]))
         {
             ++num;
         }
@@ -27,6 +27,7 @@ bool pipeExe(int argc, char **argv)
     int num_pipe = pipeNum(argc, argv);
     if (num_pipe == 0)
         return false;
+
     int ith_pipe = 0;
     int left = 0, right = 0;
 
@@ -41,6 +42,7 @@ bool pipeExe(int argc, char **argv)
         if (left == right)
         {
             printf("error: missing program\n");
+            miss_pro = true;
             return true;
         }
 
@@ -69,7 +71,7 @@ bool pipeExe(int argc, char **argv)
                     return true;
                 }
                 rt.io |= 4;
-                rt.out_file = argv[i + 1];
+                // rt.out_file = argv[i + 1];
             }
             if (isreOutput(argv[i]))
             {
@@ -80,7 +82,7 @@ bool pipeExe(int argc, char **argv)
                     return true;
                 }
                 rt.io |= 2;
-                rt.out_file = argv[i + 1];
+                // rt.out_file = argv[i + 1];
             }
             if (isreInput(argv[i]))
             {
@@ -91,7 +93,7 @@ bool pipeExe(int argc, char **argv)
                     return true;
                 }
                 rt.io |= 1;
-                rt.in_file = argv[i + 1];
+                // rt.in_file = argv[i + 1];
             }
         }
 
@@ -132,6 +134,10 @@ bool pipeExe(int argc, char **argv)
         ++ith_pipe;
         left = ++right;
     }
+
+    ith_pipe = 0;
+    left = 0;
+    right = 0;
 
     int fd[2], in = 0; // in for connecting the previous pipe and the next pipe
     pid_t pid;

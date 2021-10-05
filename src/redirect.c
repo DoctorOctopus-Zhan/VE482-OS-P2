@@ -1,7 +1,9 @@
 #include "global.h"
 
-bool isreOutputAdd(char* str) {
-    if (strcmp(str, ">>") == 0) {
+bool isreOutputAdd(char *str)
+{
+    if (strcmp(str, ">>") == 0)
+    {
         return true;
     }
     // int n = (int)strlen(str);
@@ -14,8 +16,10 @@ bool isreOutputAdd(char* str) {
     return false;
 }
 
-bool isreOutput(char* str) {
-    if (strcmp(str, ">") == 0) {
+bool isreOutput(char *str)
+{
+    if (strcmp(str, ">") == 0)
+    {
         return true;
     }
     // int n = (int)strlen(str);
@@ -28,8 +32,10 @@ bool isreOutput(char* str) {
     return false;
 }
 
-bool isreInput(char* str) {
-    if (strcmp(str, "<") == 0) {
+bool isreInput(char *str)
+{
+    if (strcmp(str, "<") == 0)
+    {
         return true;
     }
     // int n = (int)strlen(str);
@@ -42,9 +48,11 @@ bool isreInput(char* str) {
     return false;
 }
 
-void redirect_in(char* in_file) {
+void redirect_in(char *in_file)
+{
     int in_fd = open(in_file, O_RDONLY, 0666);
-    if (in_fd == -1) {
+    if (in_fd == -1)
+    {
         // perror(in_file);
         printf("%s: No such file or directory\n", in_file);
         open_non_exist = true;
@@ -56,9 +64,11 @@ void redirect_in(char* in_file) {
     return;
 }
 
-void redirect_out(char* out_file) {
+void redirect_out(char *out_file)
+{
     int out_fd = open(out_file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-    if (out_fd == -1) {
+    if (out_fd == -1)
+    {
         // perror(out_file);
         printf("%s: Permission denied\n", out_file);
         open_failed = true;
@@ -69,45 +79,54 @@ void redirect_out(char* out_file) {
     return;
 }
 
-void redirect_outAdd(char* out_file) {
+void redirect_outAdd(char *out_file)
+{
     int out_fd = open(out_file, O_WRONLY | O_CREAT | O_APPEND, 0666);
+    if (out_fd == -1)
+    {
+        // perror(out_file);
+        printf("%s: Permission denied\n", out_file);
+        open_failed = true;
+        return;
+    }
     dup2(out_fd, 1);
     close(out_fd);
     return;
 }
 
-void redirect_fd(redirect_t* rt) {
+void redirect_fd(redirect_t *rt)
+{
     switch (rt->io)
     {
     case 0:
         break;
     case 1:
-        {
-            redirect_in(rt->in_file);
-            break;
-        }
+    {
+        redirect_in(rt->in_file);
+        break;
+    }
     case 2:
-        {
-            redirect_out(rt->out_file);
-            break;
-        }
+    {
+        redirect_out(rt->out_file);
+        break;
+    }
     case 3:
-        {
-            redirect_in(rt->in_file);
-            redirect_out(rt->out_file);
-            break;
-        }
+    {
+        redirect_in(rt->in_file);
+        redirect_out(rt->out_file);
+        break;
+    }
     case 4:
-        {
-            redirect_outAdd(rt->out_file);
-            break;
-        }
+    {
+        redirect_outAdd(rt->out_file);
+        break;
+    }
     case 5:
-        {
-            redirect_in(rt->in_file);
-            redirect_outAdd(rt->out_file);
-            break;
-        }
+    {
+        redirect_in(rt->in_file);
+        redirect_outAdd(rt->out_file);
+        break;
+    }
     default:
         // error handling
         break;

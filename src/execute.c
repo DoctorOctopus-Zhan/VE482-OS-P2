@@ -5,6 +5,7 @@ int execute(int argc, char **argv)
     dup_in_re = false;
     dup_out_re = false;
     syntax_error = false;
+    miss_pro = false;
 
     pid_t pid;
     if (argv[0] == NULL)
@@ -19,6 +20,7 @@ int execute(int argc, char **argv)
     dup_in_re = false;
     dup_out_re = false;
     syntax_error = false;
+    miss_pro = false;
 
     redirect_t rt;
     rt.io = 0;
