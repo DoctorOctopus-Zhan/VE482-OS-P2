@@ -45,8 +45,8 @@ bool isreInput(char* str) {
 void redirect_in(char* in_file) {
     int in_fd = open(in_file, O_RDONLY, 0666);
     if (in_fd == -1) {
-        perror(in_file);
-        // printf("%s: No such file or directory\n", in_file);
+        // perror(in_file);
+        printf("%s: No such file or directory\n", in_file);
         open_non_exist = true;
         // close(in_fd);
         return;

@@ -29,6 +29,110 @@ bool pipeExe(int argc, char **argv)
         return false;
     int ith_pipe = 0;
     int left = 0, right = 0;
+
+    // check errors
+    while (ith_pipe <= num_pipe)
+    {
+        while (right < argc && strcmp(argv[right], "|") != 0)
+        {
+            ++right;
+        }
+
+        if (left == right)
+        {
+            printf("error: missing program\n");
+            return true;
+        }
+
+        // check if there exists redirect
+        redirect_t rt;
+        rt.io = 0;
+        for (int i = left; i < right; ++i)
+        {
+            if (isreInput(argv[i]) || isreOutput(argv[i]) || isreOutputAdd(argv[i]) || ispipe(argv[i]))
+            {
+                if (isreInput(argv[i + 1]) || isreOutput(argv[i + 1]) || isreOutputAdd(argv[i + 1]) || ispipe(argv[i + 1]))
+                {
+                    syntax_error = true;
+                    syntax_error_token = argv[i + 1];
+                    printf("syntax error near unexpected token `%s'\n", syntax_error_token);
+                    return true;
+                }
+            }
+
+            if (isreOutputAdd(argv[i]))
+            {
+                if (rt.io & 2 || rt.io & 4)
+                {
+                    dup_out_re = true;
+                    printf("error: duplicated output redirection\n");
+                    return true;
+                }
+                rt.io |= 4;
+                rt.out_file = argv[i + 1];
+            }
+            if (isreOutput(argv[i]))
+            {
+                if (rt.io & 2 || rt.io & 4)
+                {
+                    dup_out_re = true;
+                    printf("error: duplicated output redirection\n");
+                    return true;
+                }
+                rt.io |= 2;
+                rt.out_file = argv[i + 1];
+            }
+            if (isreInput(argv[i]))
+            {
+                if (rt.io & 1)
+                {
+                    dup_in_re = true;
+                    printf("error: duplicated input redirection\n");
+                    return true;
+                }
+                rt.io |= 1;
+                rt.in_file = argv[i + 1];
+            }
+        }
+
+        if (ith_pipe == 0)
+        {
+            if (rt.io & 2 || rt.io & 4)
+            {
+                dup_out_re = true;
+                printf("error: duplicated output redirection\n");
+                return true;
+            }
+        }
+        // the last pipe, change the input only
+        else if (ith_pipe == num_pipe)
+        {
+            if (rt.io & 1)
+            {
+                dup_in_re = true;
+                printf("error: duplicated input redirection\n");
+                return true;
+            }
+        }
+        else
+        {
+            if (rt.io & 1)
+            {
+                dup_in_re = true;
+                printf("error: duplicated input redirection\n");
+                return true;
+            }
+            if (rt.io & 2 || rt.io & 4)
+            {
+                dup_out_re = true;
+                printf("error: duplicated output redirection\n");
+                return true;
+            }
+        }
+        ++ith_pipe;
+        left = ++right;
+    }
+
     int fd[2], in = 0; // in for connecting the previous pipe and the next pipe
     pid_t pid;
 
@@ -46,46 +150,19 @@ bool pipeExe(int argc, char **argv)
         rt.io = 0;
         for (int i = left; i < right; ++i)
         {
-            if (isreInput(argv[i]) || isreOutput(argv[i]) || isreOutputAdd(argv[i]) || ispipe(argv[i]))
-            {
-                if (isreInput(argv[i + 1]) || isreOutput(argv[i + 1]) || isreOutputAdd(argv[i + 1]) || ispipe(argv[i + 1]))
-                {
-                    syntax_error = true;
-                    syntax_error_token = argv[i + 1];
-                    printf("syntax error near unexpected token `%s'\n", syntax_error_token);
-                }
-            }
 
             if (isreOutputAdd(argv[i]))
             {
-                if (rt.io & 2 || rt.io & 4)
-                {
-                    dup_out_re = true;
-                    printf("error: duplicated output redirection\n");
-                    break;
-                }
                 rt.io |= 4;
                 rt.out_file = argv[i + 1];
             }
             if (isreOutput(argv[i]))
             {
-                if (rt.io & 2 || rt.io & 4)
-                {
-                    dup_out_re = true;
-                    printf("error: duplicated output redirection\n");
-                    break;
-                }
                 rt.io |= 2;
                 rt.out_file = argv[i + 1];
             }
             if (isreInput(argv[i]))
             {
-                if (rt.io & 1)
-                {
-                    dup_in_re = true;
-                    printf("error: duplicated input redirection\n");
-                    break;
-                }
                 rt.io |= 1;
                 rt.in_file = argv[i + 1];
             }
@@ -106,6 +183,12 @@ bool pipeExe(int argc, char **argv)
             }
         }
         argv_new[argc_new] = NULL;
+
+        // if (argv_new[0] == NULL)
+        // {
+        //     printf("error: missing program\n");
+        //     return true;
+        // }
 
         pipe(fd);
 
@@ -141,10 +224,6 @@ bool pipeExe(int argc, char **argv)
                 exit(1);
             }
 
-            if (open_non_exist || open_failed || dup_in_re || dup_out_re || syntax_error || miss_pro)
-            {
-                exit(1);
-            }
             execvp(argv_new[0], argv_new);
             printf("%s: command not found\n", argv_new[0]);
             exit(1);
@@ -155,11 +234,6 @@ bool pipeExe(int argc, char **argv)
         }
         else
         {
-            // int status;
-            // waitpid(pid, &status, 0);
-            // fflush(stdout);
-            // close(fd[1]);
-            // read()
         }
         ++ith_pipe;
         left = ++right;

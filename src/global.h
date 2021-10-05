@@ -12,6 +12,7 @@
 #include <signal.h>
 #include <setjmp.h>
 #include <fcntl.h>
+#include <errno.h>
 
 #define MAX_LENGTH 1024
 

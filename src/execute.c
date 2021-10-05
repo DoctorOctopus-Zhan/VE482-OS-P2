@@ -16,21 +16,27 @@ int execute(int argc, char **argv)
         return 1;
     }
 
+    dup_in_re = false;
+    dup_out_re = false;
+    syntax_error = false;
+
     redirect_t rt;
     rt.io = 0;
 
-    
     // check if there exists redirect
     for (int i = 0; i < argc; ++i)
     {
-        if (isreInput(argv[i]) || isreOutput(argv[i]) || isreOutputAdd(argv[i]) || ispipe(argv[i]))
+        if (isreInput(argv[i]) || isreOutput(argv[i]) || isreOutputAdd(argv[i]))
         {
-            if (isreInput(argv[i + 1]) || isreOutput(argv[i + 1]) || isreOutputAdd(argv[i + 1]) || ispipe(argv[i + 1]))
+            if (i + 1 < argc)
             {
-                syntax_error = true;
-                syntax_error_token = argv[i + 1];
-                printf("syntax error near unexpected token `%s'\n", syntax_error_token);
-                break;
+                if (isreInput(argv[i + 1]) || isreOutput(argv[i + 1]) || isreOutputAdd(argv[i + 1]))
+                {
+                    syntax_error = true;
+                    syntax_error_token = argv[i + 1];
+                    printf("syntax error near unexpected token `%s'\n", syntax_error_token);
+                    return 1;
+                }
             }
         }
 
@@ -40,7 +46,7 @@ int execute(int argc, char **argv)
             {
                 dup_out_re = true;
                 printf("error: duplicated output redirection\n");
-                break;
+                return 1;
             }
             rt.io |= 4;
             rt.out_file = argv[i + 1];
@@ -51,7 +57,7 @@ int execute(int argc, char **argv)
             {
                 dup_out_re = true;
                 printf("error: duplicated output redirection\n");
-                break;
+                return 1;
             }
             rt.io |= 2;
             rt.out_file = argv[i + 1];
@@ -62,10 +68,20 @@ int execute(int argc, char **argv)
             {
                 dup_in_re = true;
                 printf("error: duplicated input redirection\n");
-                break;
+                return 1;
             }
             rt.io |= 1;
-            rt.in_file = argv[i + 1];
+            if (i + 1 >= argc)
+            {
+                char infile[MAX_LENGTH];
+                printf("> ");
+                scanf("%s", infile);
+                rt.in_file = infile;
+            }
+            else
+            {
+                rt.in_file = argv[i + 1];
+            }
         }
     }
 
@@ -86,12 +102,12 @@ int execute(int argc, char **argv)
     }
     argv_new[argc_new] = NULL;
 
-    // argc = argc_new;
-    // for (int i = 0; i < argc; ++i) {
-    //     argv[i] = argv_new[i];
-    // }
-    // argv[argc] = NULL;
-    // free(argv_new);
+    if (argv_new[0] == NULL)
+    {
+        printf("error: missing program\n");
+        free(argv_new);
+        return 1;
+    }
 
     if (strcmp(argv_new[0], "exit") == 0)
     { // bulit-in exit
@@ -119,7 +135,7 @@ int execute(int argc, char **argv)
     { // built-in cd
         if (argc > 2)
         {
-            printf("mumsh: cd: too many arguments\n");
+            printf("cd: too many arguments\n");
             // free(argv_new);
             return 1;
         }
@@ -128,7 +144,7 @@ int execute(int argc, char **argv)
 
         if (cd_success == -1)
         {
-            printf("mumsh: cd: %s: No such file or directory\n", argv_new[1]);
+            printf("%s: No such file or directory\n", argv_new[1]);
         }
         else if (cd_success == 0)
         {
@@ -151,6 +167,7 @@ int execute(int argc, char **argv)
             {
                 exit(1);
             }
+
             execvp(argv_new[0], argv_new);
 
             printf("%s: command not found\n", argv_new[0]);
