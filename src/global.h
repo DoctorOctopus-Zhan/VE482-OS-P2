@@ -50,6 +50,7 @@ void redirect_fd(redirect_t* rt);
 
 // pipe
 
+bool ispipe(char* str);
 int pipeNum(int argc, char** argv);
 bool pipeExe(int argc, char** argv);
 
@@ -61,5 +62,20 @@ int mycd(int argc, char** argv, char prePath[MAX_LENGTH]);
 // ctrl C
 
 void sigint_handler(int signo);
+
+// error
+
+bool open_non_exist;
+
+bool open_failed;
+
+bool dup_in_re;
+
+bool dup_out_re;
+
+bool syntax_error;
+char* syntax_error_token;
+
+bool miss_pro;
 
 #endif

@@ -44,6 +44,13 @@ bool isreInput(char* str) {
 
 void redirect_in(char* in_file) {
     int in_fd = open(in_file, O_RDONLY, 0666);
+    if (in_fd == -1) {
+        perror(in_file);
+        // printf("%s: No such file or directory\n", in_file);
+        open_non_exist = true;
+        // close(in_fd);
+        return;
+    }
     dup2(in_fd, 0);
     close(in_fd);
     return;
@@ -51,6 +58,12 @@ void redirect_in(char* in_file) {
 
 void redirect_out(char* out_file) {
     int out_fd = open(out_file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+    if (out_fd == -1) {
+        // perror(out_file);
+        printf("%s: Permission denied\n", out_file);
+        open_failed = true;
+        return;
+    }
     dup2(out_fd, 1);
     close(out_fd);
     return;
