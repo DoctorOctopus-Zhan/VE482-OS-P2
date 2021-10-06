@@ -190,6 +190,33 @@ bool pipeExe(int argc, char **argv)
         }
         argv_new[argc_new] = NULL;
 
+        for (int i = 0; i < argc_new; ++i)
+        {
+            size_t index = 0;
+            for (size_t j = 0; j < strlen(argv_new[i]); ++j)
+            {
+                // printf("%c\n", argv_new[i][j]);
+                if (argv_new[i][j] == '\\')
+                {
+                    if (j < strlen(argv_new[i]) - 1)
+                    {
+                        argv_new[i][index++] = argv_new[i][j + 1];
+                        // printf("%s\n", argv_new[i]);
+                        for (size_t k = j + 1; k < strlen(argv_new[i]); ++k)
+                        {
+                            argv_new[i][k] = argv_new[i][k + 1];
+                        }
+                        // printf("%s\n", argv_new[i]);
+                    }
+                }
+                else
+                {
+                    // argv_new[i][index++] = argv_new[i][j];
+                    ++index;
+                }
+            }
+        }
+
         // if (argv_new[0] == NULL)
         // {
         //     printf("error: missing program\n");

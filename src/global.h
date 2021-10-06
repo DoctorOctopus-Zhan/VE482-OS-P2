@@ -77,4 +77,8 @@ char *syntax_error_token;
 
 bool miss_pro;
 
+// quote
+
+bool isquote;
+
 #endif

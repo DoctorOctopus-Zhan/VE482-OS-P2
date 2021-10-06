@@ -104,6 +104,62 @@ int execute(int argc, char **argv)
     }
     argv_new[argc_new] = NULL;
 
+    for (int i = 0; i < argc_new; ++i)
+    {
+        size_t index = 0;
+        for (size_t j = 0; j < strlen(argv_new[i]); ++j)
+        {
+            // printf("%c\n", argv_new[i][j]);
+            if (argv_new[i][j] == '\\')
+            {
+                if (j < strlen(argv_new[i]) - 1)
+                {
+                    argv_new[i][index++] = argv_new[i][j + 1];
+                    // printf("%s\n", argv_new[i]);
+                    for (size_t k = j + 1; k < strlen(argv_new[i]); ++k)
+                    {
+                        argv_new[i][k] = argv_new[i][k + 1];
+                    }
+                    // printf("%s\n", argv_new[i]);
+                }
+            }
+            else
+            {
+                // argv_new[i][index++] = argv_new[i][j];
+                ++index;
+            }
+        }
+    }
+
+    // remove '\' ahead of '<' '>' '|'
+    // char **argv_new = (char **)malloc(MAX_LENGTH * sizeof(char *));
+    // // memset(argv_new, 0, MAX_LENGTH * sizeof(char *));
+    // for (int i = 0; i < argc_new; ++i)
+    // {
+
+    //     for (size_t j = 0; j < strlen(argv_temp[i]); ++j)
+    //     {
+    //         size_t index = 0;
+    //         printf("%c\n", argv_temp[i][j]);
+    //         if (argv_temp[i][j] == '\\')
+    //         {
+    //             if (j < strlen(argv_temp[i])-1)
+    //             {
+    //                 argv_new[i][index++] = argv_temp[i][j + 1];
+    //                 ++j;
+    //             }
+
+    //             // ++j;
+    //         }
+    //         else
+    //         {
+    //             argv_new[i][index++] = argv_temp[i][j];
+    //         }
+    //     }
+    // }
+    // argv_new[argc_new] = NULL;
+    // free(argv_temp);
+
     if (argv_new[0] == NULL)
     {
         printf("error: missing program\n");
