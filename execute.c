@@ -26,6 +26,8 @@ int execute(int argc, char **argv)
     rt.io = 0;
 
     // check if there exists redirect
+    char infile[MAX_LENGTH];
+    char outfile[MAX_LENGTH];
     for (int i = 0; i < argc; ++i)
     {
         if (isreInput(argv[i]) || isreOutput(argv[i]) || isreOutputAdd(argv[i]))
@@ -62,7 +64,20 @@ int execute(int argc, char **argv)
                 return 1;
             }
             rt.io |= 2;
-            rt.out_file = argv[i + 1];
+            if (i + 1 >= argc)
+            {
+
+                printf("> ");
+                fflush(stdout);
+                // scanf("%s", outfile);
+                fgets(outfile, MAX_LENGTH, stdin);
+                outfile[strlen(outfile) - 1] = '\0';
+                rt.out_file = outfile;
+            }
+            else
+            {
+                rt.out_file = argv[i + 1];
+            }
         }
         if (isreInput(argv[i]))
         {
@@ -75,9 +90,12 @@ int execute(int argc, char **argv)
             rt.io |= 1;
             if (i + 1 >= argc)
             {
-                char infile[MAX_LENGTH];
+
                 printf("> ");
-                scanf("%s", infile);
+                fflush(stdout);
+                // scanf("%s", infile);
+                fgets(infile, MAX_LENGTH, stdin);
+                infile[strlen(infile) - 1] = '\0';
                 rt.in_file = infile;
             }
             else
@@ -102,7 +120,6 @@ int execute(int argc, char **argv)
             argv_new[argc_new++] = argv[i];
         }
     }
-    
 
     // quote handle
     for (int i = 0; i < argc_new; ++i)
@@ -129,94 +146,97 @@ int execute(int argc, char **argv)
         }
     }
 
-    if (isquote_miss)
-    {
-        char temp[MAX_LENGTH];
-        if (single_quote)
-        {
-        }
-        else if (double_quote)
-        {
-            argv_new[argc_new-1][strlen(argv_new[argc_new-1])] = '\n';
-            while (1)
-            {
-                bool complete = false;
-                printf("> ");
-                // char *temp = malloc(MAX_LENGTH * sizeof(char));
-                memset(temp, 0, MAX_LENGTH);
+    // if (isquote_miss)
+    // {
+    //     char temp[MAX_LENGTH];
+    //     if (single_quote)
+    //     {
+    //     }
+    //     else if (double_quote)
+    //     {
+    //         argv_new[argc_new-1][strlen(argv_new[argc_new-1])] = '\n';
+    //         while (1)
+    //         {
+    //             bool complete = false;
+    //             printf("> ");
+    //             // char *temp = malloc(MAX_LENGTH * sizeof(char));
+    //             memset(temp, 0, MAX_LENGTH);
 
-                // memset(temp, 0, MAX_LENGTH);
-                fgets(temp, MAX_LENGTH, stdin);
-                printf("%s\n", temp);
-                // fgets(argv_new[argc_new], MAX_LENGTH, stdin);
-                // printf("%s\n", argv_new[argc_new]);
-                // for (size_t i = 0; i < strlen(argv_new[argc_new]); ++i)
-                // {
-                //     if (argv_new[argc_new][i] == '"')
-                //     {
-                //         for (size_t k = i; k < strlen(argv_new[argc_new]); ++k)
-                //         {
-                //             argv_new[argc_new][k] = argv_new[argc_new][k + 1];
-                            
-                //         }
-                //         complete = true;
-                //         break;
-                //     }
-                // }
-                for (size_t i = 0; i < strlen(temp); ++i)
-                {
-                    if (temp[i] == '"')
-                    {
-                        // for (size_t k = i; k < strlen(temp); ++k)
-                        // {
-                        //     temp[k] = temp[k + 1];
-                            
-                        // }
-                        temp[i] = temp[i+1];
-                        complete = true;
-                        break;
-                    }
-                }
-                
-                temp[strlen(temp)-1] = '\0';
-                // printf("%s\n", temp);
-                argv_new[argc_new] = &temp[0];
-                printf("%s\n", argv_new[argc_new]);
-                
-                // for (size_t i = 0; i < strlen(argv_new[argc_new]); ++i)
-                // {
-                //     printf("%s\n", argv_new[i]);
-                //     if (argv_new[argc_new][i] == '"')
-                //     {
-                //         for (size_t k = i; k < strlen(argv_new[i]); ++k)
-                //         {
-                //             argv_new[i][k] = argv_new[i][k + 1];
-                //         }
-                //         printf("%s\n", argv_new[i]);
-                //         complete = true;
-                //     }
-                // }
-                
-                // free(temp);
-                ++argc_new;
-                // for (int i = 0; i < argc_new; ++i)
-                // {
-                //     printf("%s\n", argv_new[i]);
-                // }
-                if (complete)
-                {
-                    break;
-                }
-            }
-        }
-    }
+    //             // memset(temp, 0, MAX_LENGTH);
+    //             fgets(temp, MAX_LENGTH, stdin);
+    //             printf("%s\n", temp);
+    //             // fgets(argv_new[argc_new], MAX_LENGTH, stdin);
+    //             // printf("%s\n", argv_new[argc_new]);
+    //             // for (size_t i = 0; i < strlen(argv_new[argc_new]); ++i)
+    //             // {
+    //             //     if (argv_new[argc_new][i] == '"')
+    //             //     {
+    //             //         for (size_t k = i; k < strlen(argv_new[argc_new]); ++k)
+    //             //         {
+    //             //             argv_new[argc_new][k] = argv_new[argc_new][k + 1];
+
+    //             //         }
+    //             //         complete = true;
+    //             //         break;
+    //             //     }
+    //             // }
+    //             for (size_t i = 0; i < strlen(temp); ++i)
+    //             {
+    //                 if (temp[i] == '"')
+    //                 {
+    //                     // for (size_t k = i; k < strlen(temp); ++k)
+    //                     // {
+    //                     //     temp[k] = temp[k + 1];
+
+    //                     // }
+    //                     temp[i] = temp[i+1];
+    //                     complete = true;
+    //                     break;
+    //                 }
+    //             }
+
+    //             temp[strlen(temp)-1] = '\0';
+    //             // printf("%s\n", temp);
+    //             argv_new[argc_new] = &temp[0];
+    //             printf("%s\n", argv_new[argc_new]);
+
+    //             // for (size_t i = 0; i < strlen(argv_new[argc_new]); ++i)
+    //             // {
+    //             //     printf("%s\n", argv_new[i]);
+    //             //     if (argv_new[argc_new][i] == '"')
+    //             //     {
+    //             //         for (size_t k = i; k < strlen(argv_new[i]); ++k)
+    //             //         {
+    //             //             argv_new[i][k] = argv_new[i][k + 1];
+    //             //         }
+    //             //         printf("%s\n", argv_new[i]);
+    //             //         complete = true;
+    //             //     }
+    //             // }
+
+    //             // free(temp);
+    //             ++argc_new;
+    //             // for (int i = 0; i < argc_new; ++i)
+    //             // {
+    //             //     printf("%s\n", argv_new[i]);
+    //             // }
+    //             if (complete)
+    //             {
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
     argv_new[argc_new] = NULL;
 
     if (argv_new[0] == NULL)
     {
-        printf("error: missing program\n");
-        free(argv_new);
-        return 1;
+        if (rt.io == 0)
+        {
+            printf("error: missing program\n");
+            free(argv_new);
+            return 1;
+        }
     }
 
     if (strcmp(argv_new[0], "exit") == 0)

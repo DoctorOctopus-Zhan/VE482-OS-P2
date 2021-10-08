@@ -99,24 +99,14 @@ char *readInput(void)
         }
         else if (line_quote[i] == '<')
         {
-            // if (line[i-1] == '\\')
-            // {
-            //     line_new[index++] = '<';
-            //     ++i;
-            //     continue;
-            // }
+            
             line_new[index++] = ' ';
             line_new[index++] = '<';
             line_new[index++] = ' ';
         }
         else if (line_quote[i] == '|')
         {
-            // if (line[i-1] == '\\')
-            // {
-            //     line_new[index++] = '|';
-            //     ++i;
-            //     continue;
-            // }
+            
             line_new[index++] = ' ';
             line_new[index++] = '|';
             line_new[index++] = ' ';
@@ -131,10 +121,87 @@ char *readInput(void)
             line_new[index++] = line_quote[i];
         }
     }
-    // free(line);
-    // line[strlen(line)-1] = '\0';
-    // return line;
     line_new[index] = '\0';
+
+    if (isquote_miss)
+    {
+        char temp[MAX_LENGTH];
+        if (single_quote)
+        {
+            while (1)
+            {
+                line_new[index++] = '\n';
+                bool complete = false;
+                printf("> ");
+                fflush(stdout);
+                fgets(temp, MAX_LENGTH, stdin);
+                
+                
+                for (size_t i = 0; i < strlen(temp)-1; ++i)
+                {
+                    if (temp[i] == '\'')
+                    {
+                        ++single_quote;                       
+                    }
+                    else
+                    {
+                        line_new[index++] = temp[i];
+                    }
+                }
+                
+                line_new[index] = '\0';
+                
+                if (single_quote % 2 == 0)
+                {
+                    complete = true;
+                }
+                
+                if (complete)
+                {
+                    break;
+                }
+            }
+        }
+        else if (double_quote)
+        {
+            while (1)
+            {
+                line_new[index++] = '\n';
+                bool complete = false;
+                printf("> ");
+                fflush(stdout);
+                fgets(temp, MAX_LENGTH, stdin);
+                
+                
+                for (size_t i = 0; i < strlen(temp)-1; ++i)
+                {
+                    if (temp[i] == '"')
+                    {
+                        ++double_quote;                       
+                    }
+                    else
+                    {
+                        line_new[index++] = temp[i];
+                    }
+                }
+                
+                line_new[index] = '\0';
+                
+                if (double_quote % 2 == 0)
+                {
+                    complete = true;
+                }
+                
+                if (complete)
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    
+    
     free(line_quote);
     return line_new;
 }
