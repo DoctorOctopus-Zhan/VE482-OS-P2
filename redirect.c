@@ -6,13 +6,6 @@ bool isreOutputAdd(char *str)
     {
         return true;
     }
-    // int n = (int)strlen(str);
-    // int left = 0, right = 1;
-    // while (right < n) {
-    //     if (str[left++] == '>' && str[right++] == '>' && str[0] != '\'' && str[0] != '\"') {
-    //         return true;
-    //     }
-    // }
     return false;
 }
 
@@ -22,13 +15,6 @@ bool isreOutput(char *str)
     {
         return true;
     }
-    // int n = (int)strlen(str);
-    // int left = 0;
-    // while (left < n) {
-    //     if (str[left++] == '>' && str[0] != '\'' && str[0] != '\"') {
-    //         return true;
-    //     }
-    // }
     return false;
 }
 
@@ -38,13 +24,6 @@ bool isreInput(char *str)
     {
         return true;
     }
-    // int n = (int)strlen(str);
-    // int left = 0;
-    // while (left < n) {
-    //     if (str[left++] == '<' && str[0] != '\'' && str[0] != '\"') {
-    //         return true;
-    //     }
-    // }
     return false;
 }
 

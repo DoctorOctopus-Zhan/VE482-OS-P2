@@ -72,6 +72,7 @@ bool dup_in_re;
 
 bool dup_out_re;
 
+bool issyntax_error(char* line);
 bool syntax_error;
 char *syntax_error_token;
 
@@ -90,5 +91,10 @@ char job[MAX_LENGTH][MAX_LENGTH];
 int job_pid[MAX_LENGTH];
 int job_num;
 bool isback;
+
+// incomplete > < |
+
+bool isincomplete;
+bool isincomplete_redirect(char* line);
 
 #endif

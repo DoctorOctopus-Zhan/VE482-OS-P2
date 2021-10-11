@@ -195,33 +195,23 @@ bool pipeExe(int argc, char **argv)
             size_t index = 0;
             for (size_t j = 0; j < strlen(argv_new[i]); ++j)
             {
-                // printf("%c\n", argv_new[i][j]);
                 if (argv_new[i][j] == '\\')
                 {
                     if (j < strlen(argv_new[i]) - 1)
                     {
                         argv_new[i][index++] = argv_new[i][j + 1];
-                        // printf("%s\n", argv_new[i]);
                         for (size_t k = j + 1; k < strlen(argv_new[i]); ++k)
                         {
                             argv_new[i][k] = argv_new[i][k + 1];
                         }
-                        // printf("%s\n", argv_new[i]);
                     }
                 }
                 else
                 {
-                    // argv_new[i][index++] = argv_new[i][j];
                     ++index;
                 }
             }
         }
-
-        // if (argv_new[0] == NULL)
-        // {
-        //     printf("error: missing program\n");
-        //     return true;
-        // }
 
         pipe(fd);
 
@@ -267,20 +257,17 @@ bool pipeExe(int argc, char **argv)
         }
         else
         {
+            // wait the last command only (WNOHANG)
             if (isback && ith_pipe == num_pipe)
             {
                 job_pid[job_num - 1] = pid;
                 strcpy(job[job_num - 1], line);
                 printf("[%d] %s\n", job_num, line);
+                fflush(stdout);
                 waitpid(pid, NULL, WNOHANG);
             }
             else
             {
-                while (wait(NULL) != -1)
-                {
-                }
-                // int status;
-                // waitpid(pid, &status, 0);
             }
         }
         ++ith_pipe;
@@ -288,9 +275,13 @@ bool pipeExe(int argc, char **argv)
         close(fd[1]);
         in = fd[0]; // record the previous pipe
     }
-    // while (wait(NULL) != -1)
-    // {
-    // }
+    if (!isback)
+    {
+        while (wait(NULL) != -1)
+        {
+        }
+    }
+
     free(argv_new);
     return true;
 }
