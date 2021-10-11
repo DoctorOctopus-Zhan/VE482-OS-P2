@@ -17,6 +17,15 @@ void sigint_handler(int signo)
 
 int main()
 {
+    // background
+
+    job_num = 0;
+    memset(job_pid, 0, MAX_LENGTH);
+    memset(line, 0, MAX_LENGTH);
+    for (int i = 0; i < MAX_LENGTH; ++i)
+    {
+        memset(job[i], 0, MAX_LENGTH);
+    }
 
     char *line = NULL; // get a line of input
     int status;

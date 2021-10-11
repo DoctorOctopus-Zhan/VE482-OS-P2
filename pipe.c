@@ -267,15 +267,30 @@ bool pipeExe(int argc, char **argv)
         }
         else
         {
+            if (isback && ith_pipe == num_pipe)
+            {
+                job_pid[job_num - 1] = pid;
+                strcpy(job[job_num - 1], line);
+                printf("[%d] %s\n", job_num, line);
+                waitpid(pid, NULL, WNOHANG);
+            }
+            else
+            {
+                while (wait(NULL) != -1)
+                {
+                }
+                // int status;
+                // waitpid(pid, &status, 0);
+            }
         }
         ++ith_pipe;
         left = ++right;
         close(fd[1]);
         in = fd[0]; // record the previous pipe
     }
-    while (wait(NULL) != -1)
-    {
-    }
+    // while (wait(NULL) != -1)
+    // {
+    // }
     free(argv_new);
     return true;
 }

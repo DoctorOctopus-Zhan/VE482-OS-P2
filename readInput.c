@@ -2,13 +2,18 @@
 
 char *readInput(void)
 {
+    // background
+
+    isback = false;
+
     // char* line = malloc(MAX_LENGTH);
-    char line[MAX_LENGTH];
+    // char line[MAX_LENGTH];
     if (fgets(line, MAX_LENGTH, stdin) == NULL)
     {
         printf("exit\n");
         exit(0);
     }
+    
     isquote_miss = false;
     size_t len = strlen(line);
     // quotes handling
@@ -18,6 +23,12 @@ char *readInput(void)
     size_t index = 0;
     for (size_t i = 0; i < len; ++i)
     {
+        if (line[i] == '&')
+        {
+            isback = true;
+            ++job_num;
+            continue;
+        }
         if (line[i] == '"')
         {
             

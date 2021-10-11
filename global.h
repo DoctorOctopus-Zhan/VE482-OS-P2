@@ -83,4 +83,12 @@ int double_quote;
 int single_quote;
 bool isquote_miss;
 
+// background
+
+char line[MAX_LENGTH];
+char job[MAX_LENGTH][MAX_LENGTH];
+int job_pid[MAX_LENGTH];
+int job_num;
+bool isback;
+
 #endif

@@ -280,6 +280,21 @@ int execute(int argc, char **argv)
         {
         }
     }
+    else if (strcmp(argv_new[0], "jobs") == 0)
+    {
+        for (int i = 1; i <= job_num; ++i)
+        {
+            if (waitpid(job_pid[i - 1], NULL, WNOHANG) == 0)
+            {
+                printf("[%d] running %s\n", i, job[i - 1]);
+            }
+            else
+            {
+                printf("[%d] done %s\n", i, job[i - 1]);
+            }
+            
+        }
+    }
     else
     {
         switch (pid = fork())
@@ -310,7 +325,17 @@ int execute(int argc, char **argv)
             // free(argv);
 
             int status;
-            waitpid(pid, &status, 0);
+            if (isback)
+            {
+                job_pid[job_num - 1] = pid;
+                strcpy(job[job_num - 1], line);
+                printf("[%d] %s\n", job_num, line);
+                waitpid(pid, NULL, WNOHANG);
+            }
+            else
+            {
+                waitpid(pid, &status, 0);
+            }
         }
         }
     }
